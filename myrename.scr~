@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+#BEGIN {RS = ""}
+
+
+	/102/ || /TSB { print  $3 $4 $5}
+	/pdf/ {print $(NF-4)}
+
+
+
