@@ -1,13 +1,15 @@
 #!/usr/bin/bash
-exec 6<key5 	#create the file descriptor
+#exec 6<key5 	#create a file descriptor with handle 6 
+		#that points to contents of a file named key5
 PREPEND=0	#some variables
 COUNT=0
 i=1
-MYNEWDIR=moved	#make a directory to move this shit to
-rm -fr $MYNEWDIR
-mkdir $MYNEWDIR
 
-while read -u 6; #6 contains a list of file names and the name of the document
+ACTIVEDIR=TIA102_COMPLETE_2012OCT #directory of active documents
+OLDDIR=TIA102_OLD 		#directory of superceded docuemnts
+				#as updated documents become available
+				#move the old docuemnts to this folder
+#while read -u 6; #6 contains a list of file names and the name of the document
        		#that the file name refers to
 		#for example
 		#CAAA
@@ -17,8 +19,31 @@ while read -u 6; #6 contains a list of file names and the name of the document
 		#45698.pdf
 		#the job is to move the file and rename it with the name of the
 		#document i.e 17893.pdf should be CAAA_0.pdf in the moved folder
+
+
+		#create a directory called TIA102_new and put the 
+		#new files init
+NEWDIR=TIA102_NEW
+ls $NEWDIR>tempnew 
+#get teh new file names
+#find the 2 docuement ones they will have a fucking space then (1)
+#rename without the space
+#strip everything other than docname and subscript ie AAAA_0.pdf
+
+cat tempnew |
+while read 
 do
-	if [ $(echo "$REPLY"|grep pdf) ] #if the line contains a file name
+	if [ $(echo "$REPLY"|grep \() ]
+	then 
+		echo $REPLY |awk 'FS="[ ]" {print $1 $2}' |awk 'FS="(" {print $1 "_1.pdf"}' #|awk 'FS="TIA-102" {print $2}'
+	else
+		echo $REPLY |awk 'FS="[ ]" {print $1 $2}' |awk 'FS="." {print $1 "_0.pdf"}' #|awk 'FS="TIA-102" {print $2}'
+	fi
+	
+done
+#while read 
+#do
+#	if [ $(echo "$REPLY"|grep pdf) ] #if the line contains a file name
 					#rather than a document name
 					#i.e it ends in pdf
 					#then move it with the prepended shit
@@ -27,15 +52,15 @@ do
 					#with the document name and 
 					
 
-       	then
-		echo "pdf prepending and moving file" "$PREPEND""$REPLY"
-		echo "cp $REPLY "$MYNEWDIR"/"$PREPEND"_"$COUNT".pdf"
-		let "COUNT +=1"
-	else
-		PREPEND=$REPLY
-		echo "not PDF" $REPLY
-		echo "prepend" $REPLY
-		COUNT=0
-	fi
-done
+#       	then
+#		echo "pdf prepending and moving file" "$PREPEND""$REPLY"
+#		echo "cp $REPLY "$MYNEWDIR"/"$PREPEND"_"$COUNT".pdf"
+#		let "COUNT +=1"
+#	else
+#		PREPEND=$REPLY
+#		echo "not PDF" $REPLY
+#		echo "prepend" $REPLY
+#		COUNT=0
+#	fi
+#done
 exec 6<&-

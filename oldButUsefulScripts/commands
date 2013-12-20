@@ -1,0 +1,2 @@
+cat key3|sed 's/([^()]*)//g' replaces anyting betwen parens
+cat key3|sed 's/([^(]*)//g' replaces anyting betwen parens

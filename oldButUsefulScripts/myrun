@@ -1,0 +1,41 @@
+#!/usr/bin/bash
+exec 6<key5 	#create the file descriptor
+PREPEND=0	#some variables
+COUNT=0
+i=1
+MYNEWDIR=moved	#make a directory to move this shit to
+rm -fr $MYNEWDIR
+mkdir $MYNEWDIR
+
+while read -u 6; #6 contains a list of file names and the name of the document
+       		#that the file name refers to
+		#for example
+		#CAAA
+		#17893.pdf
+		#34890.pdf
+		#AABA
+		#45698.pdf
+		#the job is to move the file and rename it with the name of the
+		#document i.e 17893.pdf should be CAAA_0.pdf in the moved folder
+do
+	if [ $(echo "$REPLY"|grep pdf) ] #if the line contains a file name
+					#rather than a document name
+					#i.e it ends in pdf
+					#then move it with the prepended shit
+					#otherwise it is a document name
+					#so update the prepend variable
+					#with the document name and 
+					
+
+       	then
+		echo "pdf prepending and moving file" "$PREPEND""$REPLY"
+		echo "cp $REPLY "$MYNEWDIR"/"$PREPEND"_"$COUNT".pdf"
+		let "COUNT +=1"
+	else
+		PREPEND=$REPLY
+		echo "not PDF" $REPLY
+		echo "prepend" $REPLY
+		COUNT=0
+	fi
+done
+exec 6<&-
